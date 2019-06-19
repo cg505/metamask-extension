@@ -55,8 +55,13 @@ const selectors = {
   getMetaMetricState,
   getRpcPrefsForCurrentProvider,
   getKnownMethodData,
+<<<<<<< HEAD
   getAddressBookEntry,
   getAddressBookEntryName,
+=======
+  getValidThreeBoxApprovalRequest,
+  onlyUnconfIsThreeBox,
+>>>>>>> Adds threebox approval modal
 }
 
 module.exports = selectors
@@ -367,4 +372,24 @@ function getKnownMethodData (state, data) {
   const { knownMethodData } = state.metamask
 
   return knownMethodData && knownMethodData[fourBytePrefix]
+}
+
+function getValidThreeBoxApprovalRequest (state) {
+  const { unapprovedPersonalMsgs } = state.metamask
+  const pmKeys = Object.keys(unapprovedPersonalMsgs)
+  const validThreeBoxApprovalRequestKey = pmKeys.find(key => {
+    const { msgParams: { isMetaMask3BoxApproval, origin, from }, type } = unapprovedPersonalMsgs[key]
+    const isFromMetaMask = origin === 'MetaMask'
+    const isFromSelectedAddress = from === getSelectedAddress(state)
+    const isPersonalSign = type === 'personal_sign'
+    return isMetaMask3BoxApproval && isFromMetaMask && isFromSelectedAddress && isPersonalSign
+  })
+
+  return unapprovedPersonalMsgs[validThreeBoxApprovalRequestKey]
+}
+
+function onlyUnconfIsThreeBox (state) {
+  const onlyOneUnconfirmed = getTotalUnapprovedCount(state) === 1
+  const unconfirmedThreeBoxMessageExists = Boolean(getValidThreeBoxApprovalRequest(state))
+  return onlyOneUnconfirmed && unconfirmedThreeBoxMessageExists
 }
