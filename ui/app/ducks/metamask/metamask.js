@@ -292,7 +292,7 @@ function reduceMetamask (state, action) {
         },
       })
 
-    case actions.UPDATE_ENS_RESOLUTION:
+      case actions.UPDATE_SEND_ENS_RESOLUTION:
       return extend(metamaskState, {
         send: {
           ...metamaskState.send,
@@ -301,7 +301,7 @@ function reduceMetamask (state, action) {
         },
       })
 
-    case actions.UPDATE_ENS_RESOLUTION_ERROR:
+    case actions.UPDATE_SEND_ENS_RESOLUTION_ERROR:
       return extend(metamaskState, {
         send: {
           ...metamaskState.send,
